@@ -1,4 +1,5 @@
 import React from "react";
+import { ToastContainer, toast } from "react-toastify";
 import Form from "./Form";
 import Title from "./Title";
 import ToDoList from "./ToDoList";
@@ -17,12 +18,19 @@ export default function ToDoContainer() {
   function addTask(event) {
     event.preventDefault();
 
+    if (tasks.some((task) => task.title === newTask.trim())) {
+      toast.error("Task already exists");
+      return;
+    }
+
     if (newTask.trim() !== "") {
       setTasks((prev) => [
         ...prev,
         { id: Date.now(), title: newTask, completed: false },
       ]);
       setNewTask("");
+    } else {
+      toast.error("Task title cannot be empty");
     }
   }
 
@@ -70,6 +78,7 @@ export default function ToDoContainer() {
         currentFilter={filters}
         remainingItems={tasks.filter((task) => !task.completed).length}
       />
+      <ToastContainer />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ToDoItem({
   task,
@@ -23,13 +24,38 @@ export default function ToDoItem({
   };
 
   const saveEdit = () => {
+    const taskToUpdate = tasks.find((task) => task.id === editedTextId);
+
+    if (taskToUpdate && taskToUpdate.title === editedText) {
+      setEditedTextId(null);
+      return;
+    }
+
+    if (editedText.trim() === "") {
+      toast.error("Task title cannot be empty");
+      return;
+    }
+
+    if (tasks.some((task) => task.title === editedText.trim())) {
+      toast.error("Task title must be unique");
+      return;
+    }
+
     setTasks(
-      tasks.map((task) => {
-        return task.id === editedTextId ? { ...task, title: editedText } : task;
-      })
+      tasks.map((task) =>
+        task.id === editedTextId ? { ...task, title: editedText } : task
+      )
     );
+
     setEditedTextId(null);
   };
+
+  useEffect(() => {
+    if (editedTextId !== null && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editedTextId]);
+
   return (
     <li className="flex items-center space-x-2 " key={index}>
       <input
