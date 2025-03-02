@@ -3,7 +3,7 @@ import ToDoItem from "./ToDoItem";
 
 export default function ToDoList({ tasks, handleRemoveTask }) {
   return (
-    <div className="tasks space-y-3">
+    <ul className="tasks space-y-3">
       {tasks.map((task, index) => (
         <ToDoItem
           task={task}
@@ -12,6 +12,6 @@ export default function ToDoList({ tasks, handleRemoveTask }) {
           key={index}
         />
       ))}
-    </div>
+    </ul>
   );
 }
