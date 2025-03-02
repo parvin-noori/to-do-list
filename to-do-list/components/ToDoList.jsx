@@ -1,7 +1,12 @@
 import React from "react";
 import ToDoItem from "./ToDoItem";
 
-export default function ToDoList({ tasks, handleRemoveTask,toggleTask }) {
+export default function ToDoList({
+  tasks,
+  handleRemoveTask,
+  toggleTask,
+  setTasks,
+}) {
   return (
     <ul className="tasks space-y-3">
       {tasks.map((task, index) => (
@@ -11,6 +16,8 @@ export default function ToDoList({ tasks, handleRemoveTask,toggleTask }) {
           index={index}
           toggleTask={toggleTask}
           key={index}
+          setTasks={setTasks}
+          tasks={tasks}
         />
       ))}
     </ul>

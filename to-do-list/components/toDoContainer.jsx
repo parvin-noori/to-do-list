@@ -62,6 +62,7 @@ export default function ToDoContainer() {
         tasks={filterTasks}
         handleRemoveTask={handleRemoveTask}
         toggleTask={toggleTask}
+        setTasks={setTasks}
       />
       <Filters
         clearCompletedTasks={clearCompletedTasks}
