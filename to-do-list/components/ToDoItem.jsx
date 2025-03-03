@@ -6,56 +6,8 @@ export default function ToDoItem({
   handleRemoveTask,
   index,
   toggleTask,
-  setTasks,
-  tasks,
+  editingText
 }) {
-  const [editedTextId, setEditedTextId] = useState(null);
-  const [editedText, setEditedText] = useState("");
-
-  const inputRef = useRef(null);
-
-  const editingText = (task) => {
-    setEditedTextId(task.id);
-    setEditedText(task.title);
-
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-
-  const saveEdit = () => {
-    const taskToUpdate = tasks.find((task) => task.id === editedTextId);
-
-    if (taskToUpdate && taskToUpdate.title === editedText) {
-      setEditedTextId(null);
-      return;
-    }
-
-    if (editedText.trim() === "") {
-      toast.error("Task title cannot be empty");
-      return;
-    }
-
-    if (tasks.some((task) => task.title === editedText.trim())) {
-      toast.error("Task title must be unique");
-      return;
-    }
-
-    setTasks(
-      tasks.map((task) =>
-        task.id === editedTextId ? { ...task, title: editedText } : task
-      )
-    );
-
-    setEditedTextId(null);
-  };
-
-  useEffect(() => {
-    if (editedTextId !== null && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [editedTextId]);
-
   return (
     <li className="flex items-center space-x-2 " key={index}>
       <input
@@ -70,18 +22,7 @@ export default function ToDoItem({
         htmlFor={`task-${index}`}
         className={`peer-checked:!text-gray-400 peer-checked:line-through  hover:text-orange-500 flex-grow cursor-pointer`}
       >
-        {editedTextId === task.id ? (
-          <input
-            className="bg-gray-200 rounded-full outline-0 p-2"
-            ref={inputRef}
-            onBlur={saveEdit}
-            onKeyDown={(e) => e.key === "Enter" && saveEdit()}
-            onChange={(e) => setEditedText(e.target.value)}
-            value={editedText}
-          />
-        ) : (
-          task.title
-        )}
+        {task.title}
       </label>
       {!task.completed && (
         <button

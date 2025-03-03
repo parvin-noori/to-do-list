@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Form from "./Form";
 import Title from "./Title";
 import ToDoList from "./ToDoList";
 import { useState } from "react";
@@ -10,17 +9,20 @@ import Overlay from "./Overlay";
 
 export default function ToDoContainer() {
   const [newTask, setNewTask] = useState("");
-  const [tasks, setTasks] = useState(() => {
-    return JSON.parse(localStorage.getItem("tasks")) || [];
-  });
+  const [tasks, setTasks] = useState(
+    () => JSON.parse(localStorage.getItem("tasks")) || []
+  );
   const [filters, setFilters] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
+  const [taskToEdit, setTaskToEdit] = useState(null);
 
+  // Persisting tasks to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  // Handling changes in the input field
   function handleInputChange(event) {
     setNewTask(event.target.value);
   }
@@ -33,24 +35,43 @@ export default function ToDoContainer() {
       return;
     }
 
-    if (newTask.trim() !== "") {
-      setTasks((prev) => [
-        ...prev,
-        { id: Date.now(), title: newTask, completed: false },
-      ]);
-      setNewTask("");
-      setShowModal(false);
+    if (taskToEdit) {
+      if (newTask.trim() !== "") {
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === taskToEdit.id ? { ...task, title: newTask } : task
+          )
+        );
+        resetForm();
+      } else {
+        toast.error("Task title cannot be empty");
+      }
     } else {
-      toast.error("Task title cannot be empty");
+      if (newTask.trim() !== "") {
+        setTasks((prev) => [
+          ...prev,
+          { id: Date.now(), title: newTask, completed: false },
+        ]);
+        resetForm();
+      } else {
+        toast.error("Task title cannot be empty");
+      }
     }
   }
 
+  function resetForm() {
+    setTaskToEdit(null);
+    setNewTask("");
+    setShowModal(false);
+  }
+
+  // Remove a task
   function handleRemoveTask(index) {
     const updateTasks = tasks.filter((item, i) => i !== index);
-
     setTasks(updateTasks);
   }
 
+  // Clear completed tasks
   function clearCompletedTasks() {
     setTasks(tasks.filter((task) => !task.completed));
   }
@@ -59,6 +80,7 @@ export default function ToDoContainer() {
     setTasks([]);
   }
 
+  // Filter tasks based on the current filter and search terms
   const filterTasks = tasks.filter((task) => {
     if (filters === "active") return !task.completed;
     if (filters === "completed") return task.completed;
@@ -86,6 +108,12 @@ export default function ToDoContainer() {
     }
   };
 
+  const editingText = (task) => {
+    setShowModal(true);
+    setNewTask(task.title);
+    setTaskToEdit(task);
+  };
+
   return (
     <>
       <div className="bg-white rounded-xl p-6 w-full space-y-8 ">
@@ -101,6 +129,7 @@ export default function ToDoContainer() {
           handleRemoveTask={handleRemoveTask}
           toggleTask={toggleTask}
           setTasks={setTasks}
+          editingText={editingText}
         />
         <Filters
           clearCompletedTasks={clearCompletedTasks}

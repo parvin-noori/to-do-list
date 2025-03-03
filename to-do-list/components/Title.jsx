@@ -21,7 +21,7 @@ export default function Title({
           + new task
         </button>
       </div>
-      <form className="bg-gray-100 flex items-center justify-between  rounded-full">
+      <form className="bg-gray-100 flex items-center justify-between  rounded-full" onSubmit={(e)=>e.preventDefault()}>
         <input
           type="text"
           className="bg-transparent outline-0 grow indent-3"
@@ -31,7 +31,7 @@ export default function Title({
         />
         <button
           type="submit"
-          className="bg-orange-400 text-white rounded-full px-4 py-2"
+          className="bg-orange-400 text-white rounded-full px-8 py-3 cursor-pointer"
         >
           search
         </button>
