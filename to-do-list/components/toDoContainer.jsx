@@ -5,6 +5,8 @@ import Title from "./Title";
 import ToDoList from "./ToDoList";
 import { useState } from "react";
 import Filters from "./Filters";
+import Modal from "./Modal";
+import Overlay from "./Overlay";
 
 export default function ToDoContainer() {
   const [newTask, setNewTask] = useState("");
@@ -12,6 +14,7 @@ export default function ToDoContainer() {
     return JSON.parse(localStorage.getItem("tasks")) || [];
   });
   const [filters, setFilters] = useState("all");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -20,6 +23,7 @@ export default function ToDoContainer() {
   function handleInputChange(event) {
     setNewTask(event.target.value);
   }
+
 
   function addTask(event) {
     event.preventDefault();
@@ -35,6 +39,7 @@ export default function ToDoContainer() {
         { id: Date.now(), title: newTask, completed: false },
       ]);
       setNewTask("");
+      setShowModal(false);
     } else {
       toast.error("Task title cannot be empty");
     }
@@ -52,7 +57,7 @@ export default function ToDoContainer() {
 
   function clearAllTasks() {
     setTasks([]);
-  } 
+  }
 
   const filterTasks = tasks.filter((task) => {
     if (filters === "active") return !task.completed;
@@ -68,28 +73,44 @@ export default function ToDoContainer() {
     );
   }
 
+  const handleOutsideClick = (e) => {
+    if (e.target.id === "overlay") {
+      setShowModal(false);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl p-6 w-full space-y-8 ">
-      <Title  clearAllTasks={clearAllTasks}/>
-      <Form
+    <>
+      <div className="bg-white rounded-xl p-6 w-full space-y-8 ">
+        <Title clearAllTasks={clearAllTasks} setShowModal={setShowModal} />
+
+        <ToDoList
+          tasks={filterTasks}
+          handleRemoveTask={handleRemoveTask}
+          toggleTask={toggleTask}
+          setTasks={setTasks}
+        />
+        <Filters
+          clearCompletedTasks={clearCompletedTasks}
+          setFilters={setFilters}
+          currentFilter={filters}
+          remainingItems={tasks.filter((task) => !task.completed).length}
+        />
+        <ToastContainer />
+      </div>
+      <Modal
         newTask={newTask}
         handleInputChange={handleInputChange}
         addTask={addTask}
-       
+        setShowModal={setShowModal}
+        showModal={showModal}
       />
-      <ToDoList
-        tasks={filterTasks}
-        handleRemoveTask={handleRemoveTask}
-        toggleTask={toggleTask}
-        setTasks={setTasks}
-      />
-      <Filters
-        clearCompletedTasks={clearCompletedTasks}
-        setFilters={setFilters}
-        currentFilter={filters}
-        remainingItems={tasks.filter((task) => !task.completed).length}
-      />
-      <ToastContainer />
-    </div>
+
+      {showModal && (
+        <>
+          <Overlay handleOutsideClick={handleOutsideClick} />
+        </>
+      )}
+    </>
   );
 }
