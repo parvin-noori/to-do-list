@@ -15,6 +15,7 @@ export default function ToDoContainer() {
   });
   const [filters, setFilters] = useState("all");
   const [showModal, setShowModal] = useState(false);
+  const [searchTerms, setSearchTerms] = useState("");
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -23,7 +24,6 @@ export default function ToDoContainer() {
   function handleInputChange(event) {
     setNewTask(event.target.value);
   }
-
 
   function addTask(event) {
     event.preventDefault();
@@ -62,6 +62,13 @@ export default function ToDoContainer() {
   const filterTasks = tasks.filter((task) => {
     if (filters === "active") return !task.completed;
     if (filters === "completed") return task.completed;
+
+    if (
+      searchTerms &&
+      !task.title.toLowerCase().includes(searchTerms.toLowerCase())
+    ) {
+      return false;
+    }
     return true;
   });
 
@@ -82,7 +89,12 @@ export default function ToDoContainer() {
   return (
     <>
       <div className="bg-white rounded-xl p-6 w-full space-y-8 ">
-        <Title clearAllTasks={clearAllTasks} setShowModal={setShowModal} />
+        <Title
+          clearAllTasks={clearAllTasks}
+          setShowModal={setShowModal}
+          searchTerms={searchTerms}
+          setSearchTerms={setSearchTerms}
+        />
 
         <ToDoList
           tasks={filterTasks}
