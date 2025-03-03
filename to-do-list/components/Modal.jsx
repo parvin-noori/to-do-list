@@ -19,6 +19,7 @@ export default function Modal({
           handleInputChange={handleInputChange}
           addTask={addTask}
           setShowModal={setShowModal}
+          showModal={showModal}
         />
       </div>
     </div>

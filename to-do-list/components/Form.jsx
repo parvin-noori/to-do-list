@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function Form({
   handleInputChange,
   newTask,
   addTask,
   setShowModal,
+  showModal,
 }) {
-  
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (showModal) {
+      inputRef.current.focus();
+    }
+  }, [showModal]);
+
   return (
-    <form className="space-y-4" onSubmit={addTask} >
+    <form className="space-y-4" onSubmit={addTask}>
       <div className="input-group flex flex-col space-y-2">
         <label htmlFor="taskName" className="capitalize">
           title task
@@ -20,6 +28,7 @@ export default function Form({
           value={newTask}
           onChange={handleInputChange}
           id="taskName"
+          ref={inputRef}
         />
       </div>
       {/* <div className="input-group flex flex-col space-y-2">
