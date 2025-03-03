@@ -50,6 +50,10 @@ export default function ToDoContainer() {
     setTasks(tasks.filter((task) => !task.completed));
   }
 
+  function clearAllTasks() {
+    setTasks([]);
+  } 
+
   const filterTasks = tasks.filter((task) => {
     if (filters === "active") return !task.completed;
     if (filters === "completed") return task.completed;
@@ -66,11 +70,12 @@ export default function ToDoContainer() {
 
   return (
     <div className="bg-white rounded-xl p-6 w-full space-y-8">
-      <Title />
+      <Title  clearAllTasks={clearAllTasks}/>
       <Form
         newTask={newTask}
         handleInputChange={handleInputChange}
         addTask={addTask}
+       
       />
       <ToDoList
         tasks={filterTasks}
