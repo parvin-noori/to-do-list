@@ -8,7 +8,7 @@ export default function ToDoList({
   setTasks,
 }) {
   return (
-    <ul className="tasks space-y-3">
+    <ul className="tasks space-y-3 max-h-96 overflow-y-auto">
       {tasks.map((task, index) => (
         <ToDoItem
           task={task}

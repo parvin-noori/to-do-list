@@ -69,7 +69,7 @@ export default function ToDoContainer() {
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 w-full space-y-8">
+    <div className="bg-white rounded-xl p-6 w-full space-y-8 ">
       <Title  clearAllTasks={clearAllTasks}/>
       <Form
         newTask={newTask}
