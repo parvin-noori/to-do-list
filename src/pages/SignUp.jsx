@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../helper/config.js";
+import { UserContext } from "../contexts/user/user-context.jsx";
 
 export default function SignUp() {
-  const [userInfo, setUserInfo] = useState({});
   const navigate = useNavigate();
+  const { userInfo, setUserInfo } = useContext(UserContext);
 
   const handleOnChange = (e) => {
     const id = e.target.id;
@@ -24,7 +25,7 @@ export default function SignUp() {
       password: userInfo.password,
     });
     if (!error) {
-      navigate('/login')
+      navigate("/login");
     }
   };
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {  useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Title from "./Title";
 import ToDoList from "./ToDoList";
@@ -16,7 +16,8 @@ export default function ToDoContainer() {
   const [showModal, setShowModal] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
   const [taskToEdit, setTaskToEdit] = useState(null);
-
+ 
+  
   // Persisting tasks to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));

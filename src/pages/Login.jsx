@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../helper/config.js";
 import { toast } from "react-toastify";
+import { UserContext } from "../contexts/user/user-context.jsx";
 
 export default function SignUp() {
-  const [userInfo, setUserInfo] = useState({});
+  const { userInfo, setUserInfo, setIsAuthunticated } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleOnChange = (e) => {
@@ -26,8 +27,9 @@ export default function SignUp() {
     });
     if (!error) {
       localStorage.setItem("token", data.session.access_token);
-      toast.success('success login')
+      toast.success("success login");
       navigate("/");
+      setIsAuthunticated(true);
     }
   };
   return (
