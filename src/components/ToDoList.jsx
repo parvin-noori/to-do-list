@@ -1,23 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import ToDoItem from "./ToDoItem";
+import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
 
-export default function ToDoList({
-  tasks,
-  handleRemoveTask,
-  toggleTask,
-  editingText,
-}) {
+export default function ToDoList() {
+  const { filterTasks } = useContext(ToDoContext);
   return (
     <ul className="tasks space-y-3 max-h-96 overflow-y-auto">
-      {tasks.map((task, index) => (
-        <ToDoItem
-          task={task}
-          handleRemoveTask={handleRemoveTask}
-          index={index}
-          toggleTask={toggleTask}
-          key={index}
-          editingText={editingText}
-        />
+      {filterTasks.map((task, index) => (
+        <ToDoItem task={task} index={index} key={index} />
       ))}
     </ul>
   );

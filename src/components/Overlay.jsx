@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
 
-export default function Overlay({ handleOutsideClick }) {
+export default function Overlay() {
+  const { handleOutsideClick } = useContext(ToDoContext);
+  
   return (
     <div
       className="overlay bg-black/50 inset-0 fixed backdrop-blur-sm z-10"

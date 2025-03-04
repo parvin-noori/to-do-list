@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
 
-export default function Filters({
-  clearCompletedTasks,
-  setFilters,
-  currentFilter,
-  remainingItems
-}) {
+export default function Filters() {
   const filters = ["all", "active", "completed"];
+  const { clearCompletedTasks, setCurrentFilter, currentFilter, tasks } =
+    useContext(ToDoContext);
+
+  let remainingItems = tasks.filter((task) => !task.completed).length;
 
   return (
     <div className="flex items-center justify-between capitalize gap-x-10 text-sm">
@@ -16,7 +16,7 @@ export default function Filters({
           return (
             <li
               key={filter}
-              onClick={() => setFilters(filter)}
+              onClick={() => setCurrentFilter(filter)}
               className={`${
                 currentFilter === filter ? "font-semibold text-orange-500" : ""
               }`}

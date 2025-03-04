@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
 
-export default function Title({
-  clearAllTasks,
-  setShowModal,
-  searchTerms,
-  setSearchTerms,
-}) {
+export default function Title() {
+  const { setShowModal, searchTerms, setSearchTerms } = useContext(ToDoContext);
+  
   return (
     <div className="flex flex-col gap-y-3">
       <div className="flex items-center justify-between">
@@ -21,7 +19,10 @@ export default function Title({
           + new task
         </button>
       </div>
-      <form className="bg-gray-100 flex items-center justify-between  rounded-full" onSubmit={(e)=>e.preventDefault()}>
+      <form
+        className="bg-gray-100 flex items-center justify-between  rounded-full"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <input
           type="text"
           className="bg-transparent outline-0 grow indent-3"

@@ -1,13 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { useContext } from "react";
+import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
 
-export default function ToDoItem({
-  task,
-  handleRemoveTask,
-  index,
-  toggleTask,
-  editingText
-}) {
+export default function ToDoItem({ task, index }) {
+  const { handleRemoveTask, toggleTask, editingText } = useContext(ToDoContext);
   return (
     <li className="flex items-center space-x-2 " key={index}>
       <input
