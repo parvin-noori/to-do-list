@@ -1,19 +1,23 @@
-import { createContext } from "react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { createContext, useReducer, useEffect, useState } from "react";
+import { toDoReducer } from "./ToDo-reducer";
 
 export const ToDoContext = createContext();
 
+const initialState = {
+  tasks: JSON.parse(localStorage.getItem("tasks")) || [],
+};
+
 export function ToDoProvider({ children }) {
   const [newTask, setNewTask] = useState("");
-  const [tasks, setTasks] = useState(
-    () => JSON.parse(localStorage.getItem("tasks")) || []
-  );
+  // const [tasks, setTasks] = useState(
+  //   () => JSON.parse(localStorage.getItem("tasks")) || []
+  // );
   const [currentFilter, setCurrentFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
   const [taskToEdit, setTaskToEdit] = useState(null);
+  const [state, dispatch] = useReducer(toDoReducer, initialState);
+  const { tasks } = state;
 
   // Persisting tasks to localStorage whenever they change
   useEffect(() => {
@@ -28,32 +32,16 @@ export function ToDoProvider({ children }) {
   function addTask(event) {
     event.preventDefault();
 
-    if (tasks.some((task) => task.title === newTask.trim())) {
-      toast.error("Task already exists");
-      return;
-    }
-
     if (taskToEdit) {
-      if (newTask.trim() !== "") {
-        setTasks((prev) =>
-          prev.map((task) =>
-            task.id === taskToEdit.id ? { ...task, title: newTask } : task
-          )
-        );
-        resetForm();
-      } else {
-        toast.error("Task title cannot be empty");
-      }
+      dispatch({
+        type: "EDIT_TASK",
+        payload: { id: taskToEdit.id, title: newTask.trim() },
+      });
+      resetForm();
     } else {
-      if (newTask.trim() !== "") {
-        setTasks((prev) => [
-          ...prev,
-          { id: Date.now(), title: newTask, completed: false },
-        ]);
-        resetForm();
-      } else {
-        toast.error("Task title cannot be empty");
-      }
+      dispatch({ type: "ADD_TASK", payload: newTask.trim() });
+
+      setNewTask("");
     }
   }
 
@@ -65,24 +53,22 @@ export function ToDoProvider({ children }) {
 
   // Remove a task
   function handleRemoveTask(index) {
-    const updateTasks = tasks.filter((item, i) => i !== index);
-    setTasks(updateTasks);
+    dispatch({ type: "REMOVE_TASK", payload: index });
   }
 
   // Clear completed tasks
   function clearCompletedTasks() {
-    setTasks(tasks.filter((task) => !task.completed));
+    dispatch({ type: "CLEAR_COMPLETED" });
   }
 
   function clearAllTasks() {
-    setTasks([]);
+    dispatch({ type: "CLEAR_ALL" });
   }
 
   // Filter tasks based on the current filter and search terms
   const filterTasks = tasks.filter((task) => {
     if (currentFilter === "active") return !task.completed;
     if (currentFilter === "completed") return task.completed;
-
     if (
       searchTerms &&
       !task.title.toLowerCase().includes(searchTerms.toLowerCase())
@@ -93,11 +79,7 @@ export function ToDoProvider({ children }) {
   });
 
   function toggleTask(id) {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+    dispatch({ type: "TOGGLE_TASK", payload: id });
   }
 
   const handleOutsideClick = (e) => {
@@ -122,7 +104,6 @@ export function ToDoProvider({ children }) {
         filterTasks,
         handleRemoveTask,
         toggleTask,
-        setTasks,
         editingText,
         clearCompletedTasks,
         setCurrentFilter,
