@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
+import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function ToDoItem({ task, index }) {
   const { handleRemoveTask, toggleTask, editingText } = useContext(ToDoContext);

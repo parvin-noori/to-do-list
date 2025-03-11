@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
+import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function Overlay() {
   const { handleOutsideClick } = useContext(ToDoContext);

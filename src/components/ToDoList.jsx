@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ToDoItem from "./ToDoItem";
-import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
+import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function ToDoList() {
   const { filterTasks } = useContext(ToDoContext);

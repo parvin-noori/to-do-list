@@ -6,6 +6,7 @@ export default function Form({
   addTask,
   setShowModal,
   showModal,
+  handleSubmit
 }) {
   const inputRef = useRef(null);
 
@@ -16,7 +17,7 @@ export default function Form({
   }, [showModal]);
 
   return (
-    <form className="space-y-4" onSubmit={addTask}>
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="input-group flex flex-col space-y-2">
         <label htmlFor="taskName" className="capitalize">
           title task

@@ -1,10 +1,16 @@
 import { useContext } from "react";
 import Form from "./Form";
-import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
+import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function Modal() {
-  const { newTask, handleInputChange, addTask, setShowModal, showModal } =
-    useContext(ToDoContext);
+  const {
+    newTask,
+    handleInputChange,
+    addTask,
+    setShowModal,
+    showModal,
+    handleSubmit,
+  } = useContext(ToDoContext);
   return (
     <div
       className={`bg-white fixed lg:top-1/2 z-20 lg:min-w-4/12 lg:left-1/2 transform divide-y divide-gray-200 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-lg rounded-t-lg shadow-lg inset-x-0 lg:scale-0 top-full lg:opacity-0 transition-all duration-300 ${
@@ -21,6 +27,7 @@ export default function Modal() {
           addTask={addTask}
           setShowModal={setShowModal}
           showModal={showModal}
+          handleSubmit={handleSubmit}
         />
       </div>
     </div>

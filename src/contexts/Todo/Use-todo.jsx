@@ -1,5 +1,6 @@
 import { createContext, useReducer, useEffect, useState } from "react";
 import { toDoReducer } from "./ToDo-reducer";
+import { toast } from "react-toastify";
 
 export const ToDoContext = createContext();
 
@@ -29,31 +30,49 @@ export function ToDoProvider({ children }) {
     setNewTask(event.target.value);
   }
 
-  function addTask(event) {
+  function handleSubmit(event) {
     event.preventDefault();
+
+    const isDuplicate = tasks.some(
+      (task) => task.title.trim().toLowerCase() === newTask.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast.error("task is exist");
+      return;
+    }
+
+    if (newTask.trim() === "") {
+      toast.error("Please enter a task");
+      return;
+    }
 
     if (taskToEdit) {
       dispatch({
         type: "EDIT_TASK",
-        payload: { id: taskToEdit.id, title: newTask.trim() },
+        payload: { id: taskToEdit.id, title: newTask },
       });
-      resetForm();
+      setTaskToEdit(null);
+      toast.success("task updated");
     } else {
-      dispatch({ type: "ADD_TASK", payload: newTask.trim() });
-
-      setNewTask("");
+      dispatch({
+        type: "ADD_TASK",
+        payload: { id: Date.now(), title: newTask },
+      });
+      toast.success("task added");
     }
+
+    setShowModal(false);
+    setNewTask("");
   }
 
-  function resetForm() {
-    setTaskToEdit(null);
-    setNewTask("");
-    setShowModal(false);
-  }
+  function addTask(event) {}
+
+  function resetForm() {}
 
   // Remove a task
   function handleRemoveTask(index) {
-    dispatch({ type: "REMOVE_TASK", payload: index });
+    dispatch({ type: "REMOVE_TASK", payload: { id: tasks[index].id } });
   }
 
   // Clear completed tasks
@@ -79,12 +98,13 @@ export function ToDoProvider({ children }) {
   });
 
   function toggleTask(id) {
-    dispatch({ type: "TOGGLE_TASK", payload: id });
+    dispatch({ type: "TOGGLE_TASK", payload: { id } });
   }
 
   const handleOutsideClick = (e) => {
     if (e.target.id === "overlay") {
       setShowModal(false);
+      setNewTask("");
     }
   };
 
@@ -98,6 +118,7 @@ export function ToDoProvider({ children }) {
     <ToDoContext.Provider
       value={{
         clearAllTasks,
+        handleSubmit,
         setShowModal,
         searchTerms,
         setSearchTerms,

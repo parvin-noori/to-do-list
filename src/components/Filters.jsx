@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/ToDo-contenxt";
+import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function Filters() {
   const filters = ["all", "active", "completed"];
