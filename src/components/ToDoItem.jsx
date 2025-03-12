@@ -2,14 +2,14 @@ import { useContext } from "react";
 import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function ToDoItem({ task, index }) {
-  const { handleRemoveTask, toggleTask, editingText } = useContext(ToDoContext);
+  const { handleRemoveTask, handleToggleTask, handleEditTask } = useContext(ToDoContext);
   return (
     <li className="flex items-center space-x-2 " key={index}>
       <input
         type="checkbox"
         id={`task-${index}`}
         className="peer hidden"
-        onChange={() => toggleTask(task.id)}
+        onChange={() => handleToggleTask(task.id)}
         checked={task.completed}
       />
       <span className="size-5 border-2 border-orange-500 rounded-full peer-checked:bg-orange-500"></span>
@@ -22,7 +22,7 @@ export default function ToDoItem({ task, index }) {
       {!task.completed && (
         <button
           className="cursor-pointer hover:text-orange-500"
-          onClick={() => editingText(task)}
+          onClick={() => handleEditTask(task)}
         >
           edit
         </button>

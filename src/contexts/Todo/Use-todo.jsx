@@ -1,106 +1,93 @@
-import { createContext, useReducer, useEffect, useState } from "react";
-import { toDoReducer } from "./ToDo-reducer";
+import { createContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTask,
+  removeTask,
+  toggleTask,
+  clearCompleted,
+  clearAll,
+  editTask,
+} from "../../features/todo/todoSlice";
 
 export const ToDoContext = createContext();
 
-const initialState = {
-  tasks: JSON.parse(localStorage.getItem("tasks")) || [],
-};
-
 export function ToDoProvider({ children }) {
+  // State management
   const [newTask, setNewTask] = useState("");
-  // const [tasks, setTasks] = useState(
-  //   () => JSON.parse(localStorage.getItem("tasks")) || []
-  // );
   const [currentFilter, setCurrentFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [searchTerms, setSearchTerms] = useState("");
   const [taskToEdit, setTaskToEdit] = useState(null);
-  const [state, dispatch] = useReducer(toDoReducer, initialState);
-  const { tasks } = state;
 
-  // Persisting tasks to localStorage whenever they change
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.todo.tasks);
+
+  // Persist tasks to localStorage
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  // Handling changes in the input field
-  function handleInputChange(event) {
+  // Form handlers
+  const handleInputChange = (event) => {
     setNewTask(event.target.value);
-  }
+  };
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
+    const trimmedTask = newTask.trim();
 
-    const isDuplicate = tasks.some(
-      (task) => task.title.trim().toLowerCase() === newTask.trim().toLowerCase()
-    );
-
-    if (isDuplicate) {
-      toast.error("task is exist");
-      return;
-    }
-
-    if (newTask.trim() === "") {
+    if (trimmedTask === "") {
       toast.error("Please enter a task");
       return;
     }
 
+    const isDuplicate = tasks.some(
+      (task) => task.title.trim().toLowerCase() === trimmedTask.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast.error("Task already exists");
+      return;
+    }
+
     if (taskToEdit) {
-      dispatch({
-        type: "EDIT_TASK",
-        payload: { id: taskToEdit.id, title: newTask },
-      });
+      dispatch(editTask({ id: taskToEdit.id, title: trimmedTask }));
       setTaskToEdit(null);
-      toast.success("task updated");
+      toast.success("Task updated");
     } else {
-      dispatch({
-        type: "ADD_TASK",
-        payload: { id: Date.now(), title: newTask },
-      });
-      toast.success("task added");
+      dispatch(addTask({ id: Date.now(), title: trimmedTask }));
+      toast.success("Task added");
     }
 
     setShowModal(false);
     setNewTask("");
-  }
+  };
 
-  function addTask(event) {}
+  // Task operations
+  const handleRemoveTask = (index) => {
+    dispatch(removeTask({ id: tasks[index].id }));
+  };
 
-  function resetForm() {}
+  const handleToggleTask = (id) => {
+    dispatch(toggleTask({ id }));
+  };
 
-  // Remove a task
-  function handleRemoveTask(index) {
-    dispatch({ type: "REMOVE_TASK", payload: { id: tasks[index].id } });
-  }
+  const handleClearCompleted = () => {
+    dispatch(clearCompleted());
+  };
 
-  // Clear completed tasks
-  function clearCompletedTasks() {
-    dispatch({ type: "CLEAR_COMPLETED" });
-  }
+  const handleClearAll = () => {
+    dispatch(clearAll());
+  };
 
-  function clearAllTasks() {
-    dispatch({ type: "CLEAR_ALL" });
-  }
+  const handleEditTask = (task) => {
+    setShowModal(true);
+    setNewTask(task.title);
+    setTaskToEdit(task);
+  };
 
-  // Filter tasks based on the current filter and search terms
-  const filterTasks = tasks.filter((task) => {
-    if (currentFilter === "active") return !task.completed;
-    if (currentFilter === "completed") return task.completed;
-    if (
-      searchTerms &&
-      !task.title.toLowerCase().includes(searchTerms.toLowerCase())
-    ) {
-      return false;
-    }
-    return true;
-  });
-
-  function toggleTask(id) {
-    dispatch({ type: "TOGGLE_TASK", payload: { id } });
-  }
-
+  // Modal handlers
   const handleOutsideClick = (e) => {
     if (e.target.id === "overlay") {
       setShowModal(false);
@@ -108,37 +95,51 @@ export function ToDoProvider({ children }) {
     }
   };
 
-  const editingText = (task) => {
-    setShowModal(true);
-    setNewTask(task.title);
-    setTaskToEdit(task);
+  // Filter tasks
+  const filteredTasks = tasks.filter((task) => {
+    if (
+      searchTerms &&
+      !task.title.toLowerCase().includes(searchTerms.toLowerCase())
+    ) {
+      return false;
+    }
+
+    switch (currentFilter) {
+      case "active":
+        return !task.completed;
+      case "completed":
+        return task.completed;
+      default:
+        return true;
+    }
+  });
+
+  const contextValue = {
+    // State
+    tasks,
+    newTask,
+    currentFilter,
+    showModal,
+    searchTerms,
+    filteredTasks,
+
+    // Setters
+    setShowModal,
+    setSearchTerms,
+    setCurrentFilter,
+
+    // Handlers
+    handleSubmit,
+    handleInputChange,
+    handleRemoveTask,
+    handleToggleTask,
+    handleEditTask,
+    handleClearCompleted,
+    handleClearAll,
+    handleOutsideClick,
   };
 
   return (
-    <ToDoContext.Provider
-      value={{
-        clearAllTasks,
-        handleSubmit,
-        setShowModal,
-        searchTerms,
-        setSearchTerms,
-        filterTasks,
-        handleRemoveTask,
-        toggleTask,
-        editingText,
-        clearCompletedTasks,
-        setCurrentFilter,
-        currentFilter,
-        tasks,
-        newTask,
-        handleInputChange,
-        addTask,
-        setShowModal,
-        showModal,
-        handleOutsideClick,
-      }}
-    >
-      {children}
-    </ToDoContext.Provider>
+    <ToDoContext.Provider value={contextValue}>{children}</ToDoContext.Provider>
   );
 }

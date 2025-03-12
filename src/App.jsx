@@ -1,8 +1,10 @@
+import { Provider } from "react-redux";
+import { store } from "./store";
 import ToDoContainer from "../components/ToDoContainer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function App() {
+export default function App() {
   return (
     <div className="bg-gradient-to-r from-violet-500 to-fuchsia-500 h-svh grid place-content-center">
       <ToDoContainer />
@@ -20,5 +22,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

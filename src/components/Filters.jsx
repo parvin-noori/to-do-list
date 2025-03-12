@@ -3,7 +3,7 @@ import { ToDoContext } from "../contexts/Todo/Use-todo";
 
 export default function Filters() {
   const filters = ["all", "active", "completed"];
-  const { clearCompletedTasks, setCurrentFilter, currentFilter, tasks } =
+  const { handleClearCompleted, setCurrentFilter, currentFilter, tasks } =
     useContext(ToDoContext);
 
   let remainingItems = tasks.filter((task) => !task.completed).length;
@@ -29,7 +29,7 @@ export default function Filters() {
       <button
         type="button"
         className=" cursor-pointer hover:font-semibold"
-        onClick={clearCompletedTasks}
+        onClick={handleClearCompleted}
       >
         clear completed
       </button>
