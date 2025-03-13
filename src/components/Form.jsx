@@ -1,13 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Form({
-  handleInputChange,
-  newTask,
-  addTask,
-  setShowModal,
-  showModal,
-  handleSubmit
-}) {
+export default function Form({ newTask, setShowModal, showModal }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -17,7 +10,7 @@ export default function Form({
   }, [showModal]);
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4">
       <div className="input-group flex flex-col space-y-2">
         <label htmlFor="taskName" className="capitalize">
           title task
@@ -27,7 +20,6 @@ export default function Form({
           placeholder="add task name"
           className="bg-gray-100 indent-2 outline-0 p-4 rounded-md"
           value={newTask}
-          onChange={handleInputChange}
           id="taskName"
           ref={inputRef}
         />

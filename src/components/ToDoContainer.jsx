@@ -5,7 +5,7 @@ import Filters from "./Filters";
 import Modal from "./Modal";
 import Overlay from "./Overlay";
 import { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/Use-todo";
+import { ToDoContext } from "../contexts/Todo/toDo-context";
 
 export default function ToDoContainer() {
   const { showModal } = useContext(ToDoContext);

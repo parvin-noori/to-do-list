@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/Use-todo";
+import { ToDoContext } from "../contexts/Todo/toDo-context";
 
 export default function Title() {
   const { setShowModal, searchTerms, setSearchTerms } = useContext(ToDoContext);

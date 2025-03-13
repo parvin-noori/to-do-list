@@ -1,15 +1,12 @@
 import { useContext } from "react";
 import Form from "./Form";
-import { ToDoContext } from "../contexts/Todo/Use-todo";
+import { ToDoContext } from "../contexts/Todo/toDo-context";
 
 export default function Modal() {
   const {
     newTask,
-    handleInputChange,
-    addTask,
     setShowModal,
     showModal,
-    handleSubmit,
   } = useContext(ToDoContext);
   return (
     <div
@@ -23,11 +20,8 @@ export default function Modal() {
       <div className="modal-body p-5">
         <Form
           newTask={newTask}
-          handleInputChange={handleInputChange}
-          addTask={addTask}
           setShowModal={setShowModal}
           showModal={showModal}
-          handleSubmit={handleSubmit}
         />
       </div>
     </div>
