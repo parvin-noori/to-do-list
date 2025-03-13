@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { UserContext } from "../contexts/user/user-context";
-import { ThemeContext } from "../contexts/theme/theme-context";
+import { useSelector } from "react-redux";
+import { setIsAuthunticated } from "../features/authentication/AuthSlice";
 
 export default function MainLayout() {
   const navigate = useNavigate();
-  const { userInfo, isAuthunticated, setIsAuthunticated } =
-    useContext(UserContext);
+  const { userInfo, isAuthenticated } = useSelector((state) => state.auth);
+  const state = useSelector((state) => state.auth);
 
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useSelector((state) => state.theme);
 
   const handleClick = () => {
     localStorage.removeItem("token");
@@ -17,7 +16,7 @@ export default function MainLayout() {
   };
   return (
     <div className="bg-gradient-to-r dark:bg-red-600 from-violet-500 to-fuchsia-500 h-svh grid place-content-center">
-      {isAuthunticated && (
+      {isAuthenticated && (
         <>
           <button
             type="button"

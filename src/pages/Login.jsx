@@ -2,20 +2,22 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../services/api/supabaseClient.js";
 import { toast } from "react-toastify";
-import { UserContext } from "../contexts/user/user-context.jsx";
+import {
+  setUserInfo,
+  setIsAuthunticated,
+} from "../features/authentication/AuthSlice.jsx";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignUp() {
-  const { userInfo, setUserInfo, setIsAuthunticated } = useContext(UserContext);
+  const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOnChange = (e) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    setUserInfo((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+    dispatch(setUserInfo({ [id]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -29,7 +31,7 @@ export default function SignUp() {
       localStorage.setItem("token", data.session.access_token);
       toast.success("success login");
       navigate("/");
-      setIsAuthunticated(true);
+      dispatch(setIsAuthunticated(true))
     }
   };
   return (

@@ -5,16 +5,16 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import MainLayout from "./layout/MainLayout";
 import IdentityLayout from "./layout/IdentityLayout";
-import { useContext } from "react";
-import { UserContext } from "./contexts/user/user-context";
+import { useSelector } from "react-redux";
 
 // const isAuthunticated = () => {
 //   return localStorage.getItem("token") !== null;
 // };
 
 function ProtectedRoute({ element }) {
-  const { isAuthunticated } = useContext(UserContext);
-  return isAuthunticated ? element : <Navigate to="/login" />;
+ 
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  return isAuthenticated ? element : <Navigate to="/login" />;
 }
 
 const router = createBrowserRouter([

@@ -1,20 +1,18 @@
-import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../services/api/supabaseClient.js";
-import { UserContext } from "../contexts/user/user-context.jsx";
+import { setUserInfo } from "../features/authentication/AuthSlice.jsx";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector((state) => state.auth);
 
   const handleOnChange = (e) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    setUserInfo((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+    dispatch(setUserInfo({ [id]: value }));
   };
 
   const handleSubmit = async (e) => {
