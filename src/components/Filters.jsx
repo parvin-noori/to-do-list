@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/toDo-context";
+import { setCurrentFilter, clearAll } from "../features/todo/TodoSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Filters() {
+  const dispatch = useDispatch();
   const filters = ["all", "active", "completed"];
 
-  const { setCurrentFilter, currentFilter, handleClearAll, tasks } =
-    useContext(ToDoContext);
+  const { currentFilter, tasks } = useSelector((state) => state.todo);
+
   const remaingItem = tasks.filter((task) => !task.completed).length;
 
   return (
@@ -16,7 +17,7 @@ export default function Filters() {
           return (
             <li
               key={filter}
-              onClick={() => setCurrentFilter(filter)}
+              onClick={() => dispatch(setCurrentFilter(filter))}
               className={`${
                 currentFilter === filter
                   ? "text-orange-500 font-bold"
@@ -31,7 +32,7 @@ export default function Filters() {
       <button
         type="button"
         className=" cursor-pointer hover:font-semibold"
-        onClick={handleClearAll}
+        onClick={() => dispatch(clearAll())}
       >
         clear completed
       </button>

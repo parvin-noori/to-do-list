@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/toDo-context";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchTerms, setShowModal } from "../features/todo/TodoSlice";
 
 export default function Title() {
-  const { setShowModal, searchTerms, setSearchTerms } = useContext(ToDoContext);
-  
+  // const { setShowModal, searchTerms, setSearchTerms } = useContext(ToDoContext);
+  const dispatch = useDispatch();
+  const { searchTerms } = useSelector((state) => state.todo);
+
   return (
     <div className="flex flex-col gap-y-3">
       <div className="flex items-center justify-between">
@@ -14,7 +16,7 @@ export default function Title() {
         <button
           className="bg-orange-100 capitalize text-orange-400 px-4 py-2 rounded-lg cursor-pointer hover:bg-white hover:border-orange-400 transition-all duration-300 border border-transparent"
           type="button"
-          onClick={() => setShowModal(true)}
+          onClick={() => dispatch(setShowModal(true))}
         >
           + new task
         </button>
@@ -28,7 +30,7 @@ export default function Title() {
           className="bg-transparent outline-0 grow indent-3"
           placeholder="search task"
           value={searchTerms}
-          onChange={(e) => setSearchTerms(e.target.value)}
+          onChange={(e) => dispatch(setSearchTerms(e.target.value))}
         />
         <button
           type="submit"

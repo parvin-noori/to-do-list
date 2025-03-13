@@ -1,13 +1,9 @@
 import { useContext } from "react";
 import Form from "./Form";
-import { ToDoContext } from "../contexts/Todo/toDo-context";
+import { useSelector } from "react-redux";
 
 export default function Modal() {
-  const {
-    newTask,
-    setShowModal,
-    showModal,
-  } = useContext(ToDoContext);
+  const { showModal } = useSelector((state) => state.todo);
   return (
     <div
       className={`bg-white fixed lg:top-1/2 z-20 lg:min-w-4/12 lg:left-1/2 transform divide-y divide-gray-200 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-lg rounded-t-lg shadow-lg inset-x-0 lg:scale-0 top-full lg:opacity-0 transition-all duration-300 ${
@@ -18,11 +14,7 @@ export default function Modal() {
         <span className="font-semibold text-xl capitalize">new task to do</span>
       </div>
       <div className="modal-body p-5">
-        <Form
-          newTask={newTask}
-          setShowModal={setShowModal}
-          showModal={showModal}
-        />
+        <Form />
       </div>
     </div>
   );

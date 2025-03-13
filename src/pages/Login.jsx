@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../api/supabaseClient.js";
+import { supabase } from "../services/api/supabaseClient.js";
 import { toast } from "react-toastify";
 import { UserContext } from "../contexts/user/user-context.jsx";
 

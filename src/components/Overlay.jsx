@@ -1,8 +1,13 @@
-import React, { useContext } from "react";
-import { ToDoContext } from "../contexts/Todo/toDo-context";
+import { useDispatch } from "react-redux";
+import { setShowModal } from "../features/todo/TodoSlice";
 
 export default function Overlay() {
-  const { handleOutsideClick } = useContext(ToDoContext);
+  const dispatch = useDispatch();
+  const handleOutsideClick = (e) => {
+    if (e.target.id === "overlay") {
+      dispatch(setShowModal(false));
+    }
+  };
 
   return (
     <div
