@@ -1,7 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
+import { ToDoContext } from "../contexts/Todo/toDo-context";
 
-export default function Form({ newTask, setShowModal, showModal }) {
+export default function Form() {
   const inputRef = useRef(null);
+  const { handleSubmit, showModal, newTask, handleInputChange,setShowModal } =
+    useContext(ToDoContext);
 
   useEffect(() => {
     if (showModal) {
@@ -10,7 +13,7 @@ export default function Form({ newTask, setShowModal, showModal }) {
   }, [showModal]);
 
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="input-group flex flex-col space-y-2">
         <label htmlFor="taskName" className="capitalize">
           title task
@@ -22,6 +25,7 @@ export default function Form({ newTask, setShowModal, showModal }) {
           value={newTask}
           id="taskName"
           ref={inputRef}
+          onChange={handleInputChange}
         />
       </div>
       {/* <div className="input-group flex flex-col space-y-2">
