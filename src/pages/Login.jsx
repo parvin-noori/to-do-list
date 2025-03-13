@@ -7,6 +7,7 @@ import {
   setIsAuthunticated,
 } from "../features/authentication/AuthSlice.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/authentication/authActions.jsx";
 
 export default function SignUp() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -23,16 +24,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let { data, error } = await supabase.auth.signInWithPassword({
-      email: userInfo.email,
-      password: userInfo.password,
-    });
-    if (!error) {
-      localStorage.setItem("token", data.session.access_token);
-      toast.success("success login");
-      navigate("/");
-      dispatch(setIsAuthunticated(true))
-    }
+    loginUser(userInfo, navigate,dispatch);
   };
   return (
     <>

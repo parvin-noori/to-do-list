@@ -105,7 +105,7 @@ export default function Form() {
       <div className="grid grid-cols-2 gap-x-2">
         <button
           type="button"
-          onClick={() => dispatch(setShowModal)}
+          onClick={() => dispatch(setShowModal())}
           className="border border-orange-400 text-orange-400 px-10 py-3 rounded-md hover:contrast-200 cursor-pointer "
         >
           cancel

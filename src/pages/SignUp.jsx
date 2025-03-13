@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../services/api/supabaseClient.js";
 import { setUserInfo } from "../features/authentication/AuthSlice.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import { signUpUser } from "../features/authentication/authActions.jsx";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -18,13 +19,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signUp({
-      email: userInfo.email,
-      password: userInfo.password,
-    });
-    if (!error) {
-      navigate("/login");
-    }
+    signUpUser(userInfo,navigate);
   };
   return (
     <>
