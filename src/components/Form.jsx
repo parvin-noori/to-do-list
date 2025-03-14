@@ -1,4 +1,4 @@
-import React, {  useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setShowModal,
@@ -8,6 +8,7 @@ import {
   addTask,
 } from "../features/todo/TodoSlice";
 import { toast } from "react-toastify";
+import { handleSubmitTasks } from "../features/todo/TodoActions";
 
 export default function Form() {
   const inputRef = useRef(null);
@@ -16,34 +17,10 @@ export default function Form() {
   );
   const dispatch = useDispatch();
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const isDuplicated = tasks.some(
-      (task) => task.title.trim().toLowerCase() === newTask.trim().toLowerCase()
-    );
-
-    if (isDuplicated) {
-      toast.error("task is exist");
-      return;
-    }
-
-    if (newTask.trim() === "") {
-      toast.error("Please enter a task");
-      return;
-    }
-
-    if (taskToEdit) {
-      dispatch(editTask({ id: taskToEdit.id, title: newTask }));
-      setTaskToEdit(null);
-
-      toast.success("task updated");
-    } else {
-      dispatch(addTask({ id: Date.now(), title: newTask }));
-      toast.success(`${newTask} added`);
-    }
-    dispatch(setShowModal(false));
-    dispatch(setNewTask(""));
-  }
+    handleSubmitTasks(tasks, newTask, taskToEdit, dispatch);
+  };
 
   useEffect(() => {
     if (showModal) {

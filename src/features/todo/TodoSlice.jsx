@@ -43,6 +43,7 @@ const TodoSlice = createSlice({
         task.title = action.payload.title;
       }
     },
+    
     setShowModal: (state, action) => {
       state.showModal = action.payload;
     },
